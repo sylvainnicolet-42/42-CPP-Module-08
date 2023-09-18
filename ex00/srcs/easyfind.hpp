@@ -19,6 +19,7 @@ void	easyfind(T &container, int value) {
 	// container.end() : Retourne un itérateur pointant vers la fin du conteneur.
 	// std::find() : Recherche la première occurrence de value dans le conteneur,
 	// si elle n'est pas trouvée, retourne un itérateur pointant vers la fin du conteneur.
+	// https://cplusplus.com/reference/algorithm/find/
 	typename T::iterator it = std::find(container.begin(), container.end(), value);
 	if (it == container.end())
 		throw ValueNotFoundException();

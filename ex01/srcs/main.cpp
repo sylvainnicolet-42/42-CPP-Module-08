@@ -15,16 +15,6 @@ void	test_subject() {
 	std::cout << std::endl;
 }
 
-void	test_invalid_size() {
-	std::cout << "=== Test invalid size ===" << std::endl;
-	try {
-		Span sp = Span(0);
-	} catch (std::exception &e) {
-		std::cout << e.what() << std::endl;
-	}
-	std::cout << std::endl;
-}
-
 void	test_invalid_addNumber() {
 	std::cout << "=== Test invalid addNumber ===" << std::endl;
 	try {
@@ -91,8 +81,22 @@ void	test_big_number() {
 void	test_invalid_range() {
 	std::cout << "=== Test invalid range ===" << std::endl;
 	try {
+		std::vector<int> vec;
+		vec.push_back(1);
+		vec.push_back(2);
 		Span sp = Span(1);
-		sp.addRange(1, 2);
+		sp.addRange(vec.begin(), vec.end());
+	} catch (std::exception &e) {
+		std::cout << e.what() << std::endl;
+	}
+	try {
+		std::vector<int> vec;
+		vec.push_back(1);
+		Span sp = Span(1);
+		sp.addRange(vec.begin(), vec.end());
+		sp.showNumbers();
+		std::cout << sp.shortestSpan() << std::endl;
+		std::cout << sp.longestSpan() << std::endl;
 	} catch (std::exception &e) {
 		std::cout << e.what() << std::endl;
 	}
@@ -102,8 +106,14 @@ void	test_invalid_range() {
 void	test_valid_range() {
 	std::cout << "=== Test valid range ===" << std::endl;
 	try {
+		std::vector<int> vec;
+		vec.reserve(5);
+		for (int i = 0; i < 5; i++) {
+			vec.push_back(i);
+		}
 		Span sp = Span(5);
-		sp.addRange(1, 5);
+		sp.addRange(vec.begin(), vec.end());
+		sp.showNumbers();
 		std::cout << sp.shortestSpan() << std::endl;
 		std::cout << sp.longestSpan() << std::endl;
 	} catch (std::exception &e) {
@@ -112,15 +122,40 @@ void	test_valid_range() {
 	std::cout << std::endl;
 }
 
+void	test_copy_assignation() {
+	std::cout << "=== Test copy assignation ===" << std::endl;
+	Span sp = Span(5);
+	sp.addNumber(42);
+	sp.addNumber(24);
+	sp.addNumber(99);
+	sp.showNumbers();
+	Span sp2 = sp;
+	sp2.showNumbers();
+	std::cout << std::endl;
+}
+
+void	test_copy_constructor() {
+	std::cout << "=== Test copy constructor ===" << std::endl;
+	Span sp = Span(5);
+	sp.addNumber(42);
+	sp.addNumber(24);
+	sp.addNumber(99);
+	sp.showNumbers();
+	Span sp2(sp);
+	sp2.showNumbers();
+	std::cout << std::endl;
+}
+
 int main() {
 	test_subject();
-	test_invalid_size();
 	test_invalid_addNumber();
 	test_invalid_shortestSpan();
 	test_invalid_longestSpan();
 	test_big_number();
 	test_invalid_range();
 	test_valid_range();
+	test_copy_assignation();
+	test_copy_constructor();
 
 	return 0;
 }

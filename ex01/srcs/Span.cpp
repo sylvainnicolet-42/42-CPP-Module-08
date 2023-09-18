@@ -1,89 +1,68 @@
 #include "Span.hpp"
 
-Span::Span(unsigned int size) : _size(size), _count(0) {
-	if (size == 0) {
-		throw InvalidSizeException();
-	}
-	_arr = new int[size];
+Span::Span(unsigned int size) {
+	this->_vec.reserve(size);
 }
 
-Span::Span(const Span &other) {
-	*this = other;
+Span::Span(const Span &src) {
+	*this = src;
 }
 
-Span::~Span() {
-	delete [] _arr;
-}
+Span::~Span() {}
 
-Span &Span::operator=(const Span &other) {
-	if (this != &other) {
-		_size = other._size;
-		_count = other._count;
-		_arr = new int[_size];
-		for (unsigned int i = 0; i < _count; i++) {
-			_arr[i] = other._arr[i];
-		}
-	}
+Span &Span::operator=(const Span &src) {
+	// Copy capacity and values
+	this->_vec.reserve(src._vec.capacity());
+	this->_vec = src._vec;
 	return *this;
 }
 
 void Span::addNumber(int n) {
-	if (_count >= _size) {
+	if (this->_vec.size() == this->_vec.capacity())
 		throw FullException();
-	}
-	_arr[_count] = n;
-	_count++;
+	this->_vec.push_back(n);
 }
 
-void Span::addRange(int start, int end) {
-	if (start > end) {
-		int tmp = start;
-		start = end;
-		end = tmp;
-	}
-	if (_count + (end - start) >= _size) {
+void Span::addRange(std::vector<int>::iterator beg, std::vector<int>::iterator end) {
+
+	// distance: returns the number of elements between beg and end
+	// capacity - size: returns the number of elements that can be inserted in the container
+	if (static_cast<unsigned long>(std::distance(beg, end)) > _vec.capacity() - _vec.size())
 		throw FullException();
-	}
-	for (int i = start; i <= end; i++) {
-		_arr[_count] = i;
-		_count++;
-	}
+
+	// end: returns an iterator to the element following the last element of the range
+	// insert: inserts elements from range [beg, end) before pos
+	this->_vec.insert(this->_vec.end(), beg, end);
 }
 
-int Span::shortestSpan() {
-	if (_count <= 1) {
+int Span::shortestSpan() const {
+	if (this->_vec.size() <= 1)
 		throw NoSpanException();
-	}
-	int min = INT_MAX;
-	for (unsigned int i = 0; i < _count; i++) {
-		for (unsigned int j = i + 1; j < _count; j++) {
-			int diff = _arr[i] - _arr[j];
-			if (diff < 0) {
-				diff *= -1;
-			}
-			if (diff < min) {
-				min = diff;
-			}
-		}
+	std::vector<int> tmp(this->_vec);
+	std::sort(tmp.begin(), tmp.end());
+	int min = tmp[1] - tmp[0];
+	for (size_t i = 2; i < tmp.size(); i++) {
+		if (tmp[i] - tmp[i - 1] < min)
+			min = tmp[i] - tmp[i - 1];
 	}
 	return min;
 }
 
-int Span::longestSpan() {
-	if (_count <= 1) {
+int Span::longestSpan() const {
+	if (this->_vec.size() <= 1)
 		throw NoSpanException();
+	std::vector<int> tmp(this->_vec);
+	std::sort(tmp.begin(), tmp.end());
+	return tmp[tmp.size() - 1] - tmp[0];
+}
+
+void Span::showNumbers() const {
+	for (size_t i = 0; i < this->_vec.size(); i++) {
+		std::cout << "vec[" << i << "] = " << this->_vec[i] << std::endl;
 	}
-	int min = INT_MAX;
-	int max = INT_MIN;
-	for (unsigned int i = 0; i < _count; i++) {
-		if (_arr[i] < min) {
-			min = _arr[i];
-		}
-		if (_arr[i] > max) {
-			max = _arr[i];
-		}
-	}
-	return max - min;
+	// Show capacity and size
+	std::cout << "capacity = " << this->_vec.capacity() << std::endl;
+	std::cout << "size = " << this->_vec.size() << std::endl;
 }
 
 Span::Span() {}
