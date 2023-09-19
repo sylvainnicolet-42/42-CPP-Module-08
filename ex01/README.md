@@ -1,3 +1,5 @@
+# Les itérateurs
+
 En C++, un itérateur (iterator en anglais) est un objet qui permet de parcourir séquentiellement les éléments d'une structure de données, telle qu'un conteneur STL (Standard Template Library) comme un vecteur, une liste, un ensemble, ou une carte. Les itérateurs fournissent une interface générique pour accéder aux éléments d'une structure de données, indépendamment de la manière dont elle est implémentée.
 
 Les itérateurs sont essentiels pour traverser et manipuler les données stockées dans des conteneurs sans avoir à se soucier de leur représentation interne. Ils permettent d'abstraire la façon dont les données sont organisées, ce qui simplifie le code et le rend plus générique et réutilisable.
